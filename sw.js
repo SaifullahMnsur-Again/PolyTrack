@@ -1,13 +1,12 @@
-const CACHE_NAME = 'polytrack-pro-v2';
+const CACHE_NAME = 'polytrack-pro-v3';
 const ASSETS = [
     './',
     './index.html',
-    'https://cdn.tailwindcss.com',
+    'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css',
     'https://unpkg.com/dexie@latest/dist/dexie.js',
     'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
-// Cache core system dependencies during installation process execution step
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -16,7 +15,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// Intercept asset fetching dynamically to bypass fallback connections offline
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
