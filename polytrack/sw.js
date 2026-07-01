@@ -1,8 +1,8 @@
-const CACHE_NAME = 'polytrack-pro-v3';
+const CACHE_NAME = 'polytrack-pro-v4';
 const ASSETS = [
     './',
     './index.html',
-    'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css',
+    'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
     'https://unpkg.com/dexie@latest/dist/dexie.js',
     'https://cdn.jsdelivr.net/npm/chart.js'
 ];
