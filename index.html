@@ -14,10 +14,14 @@
         body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f1f5f9; }
         .sheet-open { transform: translateY(0); }
         .sheet-close { transform: translateY(100%); }
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
     </style>
 </head>
 <body class="min-h-screen pb-24 select-none">
 
+    <!-- Top Navigation Bar -->
     <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-4 py-3 shadow-lg flex justify-between items-center">
         <h1 class="text-xl font-extrabold text-emerald-400 tracking-tight flex items-center gap-2">
             <span>♻️</span> PolyTrack
@@ -32,13 +36,32 @@
     <main class="max-w-md mx-auto p-4 space-y-4">
         <div id="toast" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-full shadow-xl text-xs tracking-wide transition-all duration-300"></div>
 
+        <!-- MAIN SECTION A: DASHBOARD -->
         <section id="sect-dashboard" class="space-y-4">
-            <div class="bg-gradient-to-br from-emerald-600 to-teal-700 p-6 rounded-2xl shadow-xl shadow-emerald-950/20 relative overflow-hidden flex flex-col justify-between h-32">
-                <div class="absolute -right-6 -bottom-6 text-9xl opacity-10">🛍️</div>
-                <p class="text-xs uppercase font-extrabold tracking-widest text-emerald-100/70">Total Polythene Logged</p>
-                <h2 id="hero-total-count" class="text-5xl font-black tracking-tight text-white mt-1">0 <span class="text-lg font-medium text-emerald-200">pcs</span></h2>
+            
+            <!-- Realtime Comprehensive Hero Performance Matrix -->
+            <div class="grid grid-cols-3 gap-2.5">
+                <div class="bg-gradient-to-br from-emerald-600 to-teal-700 p-4 rounded-2xl shadow-lg flex flex-col justify-between h-28 relative overflow-hidden col-span-1">
+                    <p class="text-[9px] uppercase font-black tracking-wider text-emerald-100/80 leading-tight">Total Bags</p>
+                    <h2 id="hero-total-count" class="text-2xl font-black text-white font-mono leading-none">0</h2>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-md flex flex-col justify-between h-28">
+                    <p class="text-[9px] uppercase font-black tracking-wider text-slate-400 leading-tight">Daily Avg</p>
+                    <div>
+                        <h2 id="hero-daily-avg" class="text-2xl font-black text-slate-100 font-mono leading-none">0.0</h2>
+                        <span class="text-[8px] text-slate-500 font-medium">bags/day</span>
+                    </div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-md flex flex-col justify-between h-28">
+                    <p class="text-[9px] uppercase font-black tracking-wider text-slate-400 leading-tight">Event Avg</p>
+                    <div>
+                        <h2 id="hero-event-avg" class="text-2xl font-black text-slate-100 font-mono leading-none">0.0</h2>
+                        <span class="text-[8px] text-slate-500 font-medium">bags/trip</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- Filters -->
             <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl space-y-3 shadow-md">
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -55,6 +78,7 @@
             <div id="history-container" class="space-y-2"></div>
         </section>
 
+        <!-- MAIN SECTION B: COMPREHENSIVE STATISTICS -->
         <section id="sect-stats" class="hidden space-y-4">
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-sm">
@@ -96,6 +120,7 @@
             </div>
         </section>
 
+        <!-- MAIN SECTION C: SETTINGS -->
         <section id="sect-config" class="hidden space-y-6">
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3 shadow-sm">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wide">Data Migration & Recovery</h3>
@@ -135,14 +160,16 @@
         </section>
     </main>
 
+    <!-- FLOATING ACTION BUTTON -->
     <div id="fab-container" class="fixed bottom-6 right-6 z-40">
         <button onclick="openBottomSheet()" class="w-14 h-14 bg-emerald-600 hover:bg-emerald-500 rounded-full shadow-xl shadow-emerald-950/40 flex items-center justify-center text-xl active:scale-90 transition-transform text-white border border-emerald-400/20">
             ➕
         </button>
     </div>
 
+    <!-- BOTTOM SHEET FOR MULTI-SIZE ENTRIES -->
     <div id="bottom-sheet-backdrop" onclick="closeBottomSheet()" class="hidden fixed inset-0 bg-slate-950/60 z-50 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
-    <div id="bottom-sheet" class="sheet-close fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900 border-t border-slate-800 rounded-t-3xl z-50 transition-transform duration-300 overflow-hidden shadow-2xl flex flex-col" style="max-height: 80vh;">
+    <div id="bottom-sheet" class="sheet-close fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900 border-t border-slate-800 rounded-t-3xl z-50 transition-transform duration-300 overflow-hidden shadow-2xl flex flex-col" style="max-height: 85vh;">
         <div class="w-full flex justify-center py-3.5 cursor-pointer" onclick="closeBottomSheet()">
             <div class="w-12 h-1 bg-slate-700 rounded-full"></div>
         </div>
@@ -152,7 +179,7 @@
                 <span>Log Collection Event</span>
                 <button onclick="closeBottomSheet()" class="text-xs text-slate-500 font-normal hover:text-slate-300">Cancel</button>
             </h2>
-            <form id="poly-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
+            <form id="poly-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Select Source</label>
                     <div id="source-buttons-container" class="grid grid-cols-2 gap-2"></div>
@@ -161,8 +188,14 @@
 
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quantities By Size</label>
-                    <div id="size-matrix-container" class="space-y-2.5 max-h-56 overflow-y-auto bg-slate-950 p-3 rounded-xl border border-slate-800/80">
-                        </div>
+                    <div id="size-matrix-container" class="space-y-2 bg-slate-950 p-3 rounded-xl border border-slate-800/80 max-h-48 overflow-y-auto">
+                        <!-- Instantiated Dynamically -->
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Collection Timestamp</label>
+                    <input type="datetime-local" id="event-datetime" class="w-full bg-slate-950 text-slate-200 rounded-xl p-3 text-xs font-mono font-bold border border-slate-800 focus:outline-none focus:border-emerald-500">
                 </div>
 
                 <button type="submit" class="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition shadow-lg text-sm text-white border border-emerald-500/20">
@@ -203,17 +236,38 @@
             renderHistory();
         });
 
+        function getLocalISOString() {
+            const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
+            const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
+            return localISOTime;
+        }
+
         async function updateDashboardCounters() {
             const logs = await db.logs.toArray();
-            let total = 0;
+            let totalBags = 0;
+            let uniqueDays = new Set();
+
             logs.forEach(l => {
+                let qty = 0;
                 if (l.items) {
-                    total += l.items.reduce((acc, i) => acc + i.quantity, 0);
+                    qty = l.items.reduce((acc, i) => acc + i.quantity, 0);
                 } else if (l.quantity) {
-                    total += l.quantity; // Support legacy models
+                    qty = l.quantity;
+                }
+                totalBags += qty;
+                
+                if(l.datetime) {
+                    uniqueDays.add(l.datetime.split('T')[0]);
                 }
             });
-            document.getElementById('hero-total-count').innerHTML = `${total} <span class="text-sm font-semibold text-emerald-200">pcs</span>`;
+
+            const dayCount = uniqueDays.size || 1;
+            const eventCount = logs.length || 1;
+
+            // Render calculations into front page hero array grid
+            document.getElementById('hero-total-count').textContent = totalBags;
+            document.getElementById('hero-daily-avg').textContent = (totalBags / dayCount).toFixed(1);
+            document.getElementById('hero-event-avg').textContent = (totalBags / eventCount).toFixed(1);
         }
 
         function switchMainTab(tabName) {
@@ -234,6 +288,8 @@
 
         function openBottomSheet() {
             loadInputElements();
+            document.getElementById('event-datetime').value = getLocalISOString();
+            
             const backdrop = document.getElementById('bottom-sheet-backdrop');
             const sheet = document.getElementById('bottom-sheet');
             backdrop.classList.remove('hidden');
@@ -278,7 +334,7 @@
             document.querySelectorAll('.src-btn').forEach(b => {
                 b.className = parseInt(b.dataset.sid) === id 
                     ? "src-btn py-2.5 px-2 bg-emerald-600/10 text-emerald-400 border border-emerald-500 rounded-xl text-xs font-medium truncate"
-                    : "src-btn py-2.5 px-2 bg-slate-950 text-slate-300 rounded-xl border border-slate-800 text-xs font-medium truncate";
+                    : "src-btn py-2.5 px-2 bg-slate-955 text-slate-300 rounded-xl border border-slate-800 text-xs font-medium truncate";
             });
         }
 
@@ -321,17 +377,20 @@
                 return;
             }
 
+            const inputDateTime = document.getElementById('event-datetime').value;
+            const finalTimestamp = inputDateTime ? new Date(inputDateTime).toISOString() : new Date().toISOString();
+
             await db.logs.add({
                 sourceId: selectedSourceId,
                 items: loggedItems,
-                datetime: new Date().toISOString()
+                datetime: finalTimestamp
             });
 
             lastSubmissionTime = Date.now();
             closeBottomSheet();
             updateDashboardCounters();
             renderHistory(); 
-            showToast("✅ Multi-size collection logged.");
+            showToast("✅ Collection event saved.");
         }
 
         async function populateFilters() {
@@ -357,7 +416,7 @@
             if(fSz) {
                 filtered = filtered.filter(l => {
                     if (l.items) return l.items.some(i => i.sizeId === parseInt(fSz));
-                    return l.sizeId === parseInt(fSz); // Legacy filter mapping
+                    return l.sizeId === parseInt(fSz);
                 });
             }
 
@@ -368,8 +427,6 @@
 
             container.innerHTML = filtered.map(l => {
                 let dateStr = new Date(l.datetime).toLocaleDateString('en-US', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
-                
-                // Render sub-items line arrays supporting compatibility structures safely
                 let chipsHtml = '';
                 let totalEventQty = 0;
                 
@@ -424,7 +481,7 @@
                         if(srcCounts[l.sourceId] !== undefined) srcCounts[l.sourceId] += i.quantity;
                         if(szCounts[i.sizeId] !== undefined) szCounts[i.sizeId] += i.quantity;
                     });
-                } else { // Legacy data tracking parse fallback logic block
+                } else { 
                     totalBags += l.quantity;
                     if(srcCounts[l.sourceId] !== undefined) srcCounts[l.sourceId] += l.quantity;
                     if(szCounts[l.sizeId] !== undefined) szCounts[l.sizeId] += l.quantity;
@@ -524,7 +581,7 @@
                 try {
                     const parsed = JSON.parse(e.target.result);
                     if (!parsed.logs || !parsed.sources || !parsed.sizes) {
-                        showToast("❌ Invalid JSON scheme mapping template.");
+                        showToast("❌ Invalid JSON scheme structure.");
                         return;
                     }
 
@@ -544,9 +601,8 @@
 
                         await db.transaction('rw', db.logs, async () => {
                             for (const log of parsed.logs) {
-                                // Enforce millisecond de-duplication strategy 
                                 if (!existingTimestamps.has(log.datetime)) {
-                                    delete log.id; // Clean ID indexes out to let auto-increment re-index values safely
+                                    delete log.id; 
                                     await db.logs.add(log);
                                     mergeCount++;
                                 } else {
@@ -561,7 +617,7 @@
                 } catch (err) { showToast("❌ Parsing operation failure."); }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Reset pointer field target variables
+            event.target.value = ''; 
         }
 
         if ('serviceWorker' in navigator) {
