@@ -21,6 +21,7 @@
 </head>
 <body class="min-h-screen pb-28 select-none">
 
+    <!-- Sticky Minimal Top Header Bar -->
     <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40 px-4 py-3.5 shadow-md text-center">
         <h1 class="text-lg font-black text-emerald-400 tracking-tight flex items-center justify-center gap-1.5">
             <span>♻️</span> PolyTrack
@@ -30,7 +31,9 @@
     <main class="max-w-md mx-auto p-4 space-y-4">
         <div id="toast" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-full shadow-xl text-xs tracking-wide transition-all duration-300"></div>
 
+        <!-- MAIN SECTION A: DASHBOARD (MIDDLE TAB) -->
         <section id="sect-dashboard" class="space-y-4">
+            <!-- Stats Summary Cards Matrix -->
             <div class="grid grid-cols-3 gap-2.5">
                 <div class="bg-gradient-to-br from-emerald-600 to-teal-700 p-4 rounded-2xl shadow-lg flex flex-col justify-between h-28 relative overflow-hidden col-span-1">
                     <p class="text-[9px] uppercase font-black tracking-wider text-emerald-100/80 leading-tight">Total Bags</p>
@@ -52,10 +55,7 @@
                 </div>
             </div>
 
-            <button onclick="openBottomSheet()" class="w-full py-3.5 bg-slate-900 border border-slate-800/80 hover:border-emerald-500/30 rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-slate-300 tracking-wide transition-all shadow-sm active:scale-[0.99]">
-                <span class="text-emerald-400 text-sm">➕</span> Log New Collection Event
-            </button>
-
+            <!-- Filters -->
             <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl space-y-3 shadow-md">
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -72,6 +72,7 @@
             <div id="history-container" class="space-y-2"></div>
         </section>
 
+        <!-- MAIN SECTION B: COMPREHENSIVE STATISTICS (LEFT TAB) -->
         <section id="sect-stats" class="hidden space-y-4">
             <div class="grid grid-cols-2 gap-3">
                 <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-sm">
@@ -113,6 +114,7 @@
             </div>
         </section>
 
+        <!-- MAIN SECTION C: SETTINGS (RIGHT TAB) -->
         <section id="sect-config" class="hidden space-y-6">
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3 shadow-sm">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wide">Data Migration & Recovery</h3>
@@ -152,23 +154,35 @@
         </section>
     </main>
 
+    <!-- FLOATING ACTION BUTTON (FAB) RESTORED ABOVE THE NAV PANEL -->
+    <div id="fab-container" class="fixed bottom-24 right-6 z-40">
+        <button onclick="openBottomSheet()" class="w-14 h-14 bg-emerald-600 hover:bg-emerald-500 rounded-full shadow-xl shadow-emerald-950/40 flex items-center justify-center text-xl active:scale-90 transition-transform text-white border border-emerald-400/20">
+            ➕
+        </button>
+    </div>
+
+    <!-- MODERN MOBILE BOTTOM NAVIGATION BAR -->
     <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 shadow-2xl z-40 flex justify-around items-center py-2 px-6 pb-4">
+        <!-- LEFT OPTION: STATS -->
         <button onclick="switchMainTab('stats')" id="nav-btn-stats" class="flex flex-col items-center space-y-1 transition text-slate-500 group">
             <span class="text-lg group-active:scale-95 transition-transform">📊</span>
             <span class="text-[10px] font-bold uppercase tracking-wider">Stats</span>
         </button>
 
-        <button onclick="switchMainTab('dashboard')" id="nav-btn-dashboard" class="flex flex-col items-center space-y-1 transition text-emerald-400 group">
+        <!-- MIDDLE ENLARGED MAIN OPTION: RECORDS DASHBOARD -->
+        <button onclick="switchMainTab('dashboard')" id="nav-btn-dashboard" class="flex flex-col items-center space-y-1 transition text-emerald-400 scale-110 font-extrabold group">
             <span class="text-xl group-active:scale-95 transition-transform">📋</span>
             <span class="text-[10px] font-extrabold uppercase tracking-widest">Records</span>
         </button>
 
+        <!-- RIGHT OPTION: SETTINGS -->
         <button onclick="switchMainTab('config')" id="nav-btn-config" class="flex flex-col items-center space-y-1 transition text-slate-500 group">
             <span class="text-lg group-active:scale-95 transition-transform">⚙️</span>
             <span class="text-[10px] font-bold uppercase tracking-wider">Settings</span>
         </button>
     </nav>
 
+    <!-- BOTTOM SHEET ENTRY & EDIT MODE COMPONENT -->
     <div id="bottom-sheet-backdrop" onclick="closeBottomSheet()" class="hidden fixed inset-0 bg-slate-950/60 z-50 backdrop-blur-sm transition-opacity duration-300 opacity-0"></div>
     <div id="bottom-sheet" class="sheet-close fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900 border-t border-slate-800 rounded-t-3xl z-50 transition-transform duration-300 overflow-hidden shadow-2xl flex flex-col" style="max-height: 85vh;">
         <div class="w-full flex justify-center py-3.5 cursor-pointer" onclick="closeBottomSheet()">
@@ -177,10 +191,13 @@
         
         <div class="p-5 overflow-y-auto space-y-5 pb-10 flex-1">
             <h2 class="text-base font-bold text-slate-100 flex items-center justify-between">
-                <span>Log Collection Event</span>
+                <span id="sheet-title-text">Log Collection Event</span>
                 <button onclick="closeBottomSheet()" class="text-xs text-slate-500 font-normal hover:text-slate-300">Cancel</button>
             </h2>
             <form id="poly-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <!-- Hidden key field pointer for record operational targets -->
+                <input type="hidden" id="editing-log-id" value="">
+
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Select Source</label>
                     <div id="source-buttons-container" class="grid grid-cols-2 gap-2"></div>
@@ -190,7 +207,8 @@
                 <div>
                     <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quantities By Size</label>
                     <div id="size-matrix-container" class="space-y-2 bg-slate-950 p-3 rounded-xl border border-slate-800/80 max-h-48 overflow-y-auto">
-                        </div>
+                        <!-- Instantiated Dynamically -->
+                    </div>
                 </div>
 
                 <div>
@@ -198,7 +216,7 @@
                     <input type="datetime-local" id="event-datetime" class="w-full bg-slate-950 text-slate-200 rounded-xl p-3 text-xs font-mono font-bold border border-slate-800 focus:outline-none focus:border-emerald-500">
                 </div>
 
-                <button type="submit" class="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition shadow-lg text-sm text-white border border-emerald-500/20">
+                <button type="submit" id="sheet-submit-btn" class="w-full mt-2 py-3.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition shadow-lg text-sm text-white border border-emerald-500/20">
                     Save Collection Event
                 </button>
             </form>
@@ -230,15 +248,14 @@
         });
 
         db.open().then(() => {
-            loadInputElements();
             populateFilters();
             updateDashboardCounters();
             renderHistory();
         });
 
-        function getLocalISOString() {
-            const tzoffset = (new Date()).getTimezoneOffset() * 60000; 
-            const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
+        function getLocalISOString(dateObj = new Date()) {
+            const tzoffset = dateObj.getTimezoneOffset() * 60000; 
+            const localISOTime = (new Date(dateObj.getTime() - tzoffset)).toISOString().slice(0, 16);
             return localISOTime;
         }
 
@@ -266,25 +283,67 @@
             document.getElementById('hero-event-avg').textContent = (totalBags / eventCount).toFixed(1);
         }
 
-        // Updated for Navigation Bar highlighting classes
         function switchMainTab(tabName) {
             ['dashboard', 'stats', 'config'].forEach(t => {
                 document.getElementById(`sect-${t}`).classList.add('hidden');
                 document.getElementById(`nav-btn-${t}`).className = "flex flex-col items-center space-y-1 transition text-slate-500 group";
             });
             
-            document.getElementById(`sect-${tabName}`).classList.remove('hidden');
-            document.getElementById(`nav-btn-${tabName}`).className = `flex flex-col items-center space-y-1 transition ${tabName === 'dashboard' ? 'text-emerald-400 font-extrabold' : 'text-sky-400 font-bold'} group`;
+            const fab = document.getElementById('fab-container');
+            if (tabName === 'dashboard') { 
+                fab.classList.remove('hidden');
+                document.getElementById(`nav-btn-dashboard`).className = "flex flex-col items-center space-y-1 transition text-emerald-400 scale-110 font-extrabold group";
+                updateDashboardCounters(); 
+                renderHistory(); 
+            } else { 
+                fab.classList.add('hidden'); 
+                document.getElementById(`nav-btn-${tabName}`).className = `flex flex-col items-center space-y-1 transition text-sky-400 font-bold group`;
+            }
 
-            if (tabName === 'dashboard') { updateDashboardCounters(); renderHistory(); }
             if (tabName === 'stats') renderStats();
             if (tabName === 'config') renderConfigPanel();
         }
 
         function openBottomSheet() {
-            loadInputElements();
-            document.getElementById('event-datetime').value = getLocalISOString();
+            // Re-init panel fields cleanly to base instantiation defaults
+            document.getElementById('editing-log-id').value = "";
+            document.getElementById('sheet-title-text').textContent = "Log Collection Event";
+            document.getElementById('sheet-submit-btn').textContent = "Save Collection Event";
             
+            loadInputElements().then(() => {
+                document.getElementById('event-datetime').value = getLocalISOString();
+                const backdrop = document.getElementById('bottom-sheet-backdrop');
+                const sheet = document.getElementById('bottom-sheet');
+                backdrop.classList.remove('hidden');
+                setTimeout(() => { backdrop.style.opacity = "1"; }, 10);
+                sheet.classList.remove('sheet-close');
+                sheet.classList.add('sheet-open');
+            });
+        }
+
+        async function openEditSheet(logId) {
+            const log = await db.logs.get(parseInt(logId));
+            if (!log) return;
+
+            document.getElementById('editing-log-id').value = log.id;
+            document.getElementById('sheet-title-text').textContent = "Edit Collection Event";
+            document.getElementById('sheet-submit-btn').textContent = "Update Event Details";
+
+            await loadInputElements();
+            selectSource(log.sourceId);
+
+            if (log.items) {
+                log.items.forEach(i => {
+                    const el = document.getElementById(`matrix-qty-${i.sizeId}`);
+                    if (el) el.value = i.quantity;
+                });
+            } else if (log.sizeId && log.quantity) {
+                const el = document.getElementById(`matrix-qty-${log.sizeId}`);
+                if (el) el.value = log.quantity;
+            }
+
+            document.getElementById('event-datetime').value = getLocalISOString(new Date(log.datetime));
+
             const backdrop = document.getElementById('bottom-sheet-backdrop');
             const sheet = document.getElementById('bottom-sheet');
             backdrop.classList.remove('hidden');
@@ -348,12 +407,15 @@
         async function handleFormSubmit(e) {
             e.preventDefault();
             const now = Date.now();
-            if (now - lastSubmissionTime < 5000) {
+            const editIdStr = document.getElementById('editing-log-id').value;
+
+            // Enforce duplicate protection rule logic layers only on brand new entries
+            if (!editIdStr && (now - lastSubmissionTime < 5000)) {
                 showToast(`🚫 Anti-duplicate active. Wait ${Math.ceil((5000-(now-lastSubmissionTime))/1000)}s.`);
                 return;
             }
             if(!selectedSourceId) {
-                showToast("⚠️ Select a source container.");
+                showToast("⚠️ Select a source.");
                 return;
             }
 
@@ -373,17 +435,25 @@
             const inputDateTime = document.getElementById('event-datetime').value;
             const finalTimestamp = inputDateTime ? new Date(inputDateTime).toISOString() : new Date().toISOString();
 
-            await db.logs.add({
+            const recordPayload = {
                 sourceId: selectedSourceId,
                 items: loggedItems,
                 datetime: finalTimestamp
-            });
+            };
 
-            lastSubmissionTime = Date.now();
+            if (editIdStr) {
+                const targetId = parseInt(editIdStr);
+                await db.logs.update(targetId, recordPayload);
+                showToast("✏️ Collection entry updated.");
+            } else {
+                await db.logs.add(recordPayload);
+                lastSubmissionTime = Date.now();
+                showToast("✅ Collection event saved.");
+            }
+
             closeBottomSheet();
             updateDashboardCounters();
             renderHistory(); 
-            showToast("✅ Collection event saved.");
         }
 
         async function populateFilters() {
@@ -441,11 +511,14 @@
                             </div>
                             <div class="flex flex-wrap gap-1">${chipsHtml}</div>
                         </div>
-                        <div class="text-right flex items-center space-x-3 shrink-0">
-                            <div>
+                        <div class="text-right flex items-center space-x-2 shrink-0">
+                            <div class="mr-1">
                                 <span class="text-lg font-black text-slate-100 font-mono">${totalEventQty}</span> <span class="text-[9px] font-bold text-slate-400 uppercase">tot</span>
                             </div>
-                            <button onclick="deleteLog(${l.id})" class="text-rose-400 hover:text-rose-300 text-xs font-semibold hover:underline">Delete</button>
+                            <div class="flex flex-col space-y-1">
+                                <button onclick="openEditSheet(${l.id})" class="text-sky-400 hover:text-sky-300 text-[11px] font-semibold tracking-wide border border-sky-500/20 px-1.5 py-0.5 rounded bg-sky-500/5">Edit</button>
+                                <button onclick="deleteLog(${l.id})" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold tracking-wide border border-rose-500/20 px-1.5 py-0.5 rounded bg-rose-500/5">Delete</button>
+                            </div>
                         </div>
                     </div>
                 `;
